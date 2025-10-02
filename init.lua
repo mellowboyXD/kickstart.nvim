@@ -99,9 +99,29 @@ vim.keymap.set('n', '<leader>q', vim.diagnostic.setloclist, { desc = 'Open diagn
 vim.keymap.set('n', '<leader>pd', '<cmd>Ex<CR>', { desc = '[P]rint Working [D]irectory' })
 
 -- Open Terminal Vertical Split
-vim.keymap.set('n', '<leader>tv', '<cmd>vsplit | term<CR>', { desc = 'Splits & Opens [T]erminal [V]ertically' })
+local function open_term(t)
+  local fp = vim.api.nvim_buf_get_name(0)
+  local dir = vim.fn.fnamemodify(fp, ':h')
 
-vim.keymap.set('n', '<leader>th', '<cmd>split | term<CR>', { desc = 'Splits & Opens [T]erminal [H]orizontally' })
+  if dir == '' then
+    dir = vim.loop.cwd()
+  end
+
+  if t == 'v' then
+    vim.cmd 'vsplit | term'
+  elseif t == 'h' then
+    vim.cmd 'split | term'
+  end
+  vim.fn.chansend(vim.b.terminal_job_id, 'cd ' .. dir .. '\n')
+end
+
+vim.keymap.set('n', '<leader>tv', function()
+  open_term 'v'
+end, { desc = 'Splits & Opens [T]erminal [V]ertically' })
+
+vim.keymap.set('n', '<leader>th', function()
+  open_term 'h'
+end, { desc = 'Splits & Opens [T]erminal [H]orizontally' })
 
 -- Exit terminal mode in the builtin terminal with a shortcut that is a bit easier
 -- for people to discover. Otherwise, you normally need to press <C-\><C-n>, which
