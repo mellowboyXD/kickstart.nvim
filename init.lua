@@ -108,11 +108,14 @@ local function open_term(t)
   end
 
   if t == 'v' then
-    vim.cmd 'vsplit | term'
+    vim.cmd 'vsplit'
   elseif t == 'h' then
-    vim.cmd 'split | term'
+    vim.cmd 'split'
   end
-  vim.fn.chansend(vim.b.terminal_job_id, 'cd ' .. dir .. '\n')
+
+  vim.cmd('lcd ' .. dir)
+  vim.cmd 'term'
+  vim.cmd 'startinsert'
 end
 
 vim.keymap.set('n', '<leader>tv', function()
