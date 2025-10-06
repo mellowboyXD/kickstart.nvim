@@ -851,6 +851,7 @@ require('lazy').setup({
       -- Color Column
       vim.opt.cc = '80'
       vim.cmd.hi 'ColorColumn guibg=#060063'
+      vim.cmd.hi 'Normal guibg=none'
     end,
   },
 
